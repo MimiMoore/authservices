@@ -493,7 +493,7 @@ namespace Kentor.AuthServices.Saml2P
             if (status != Saml2StatusCode.Success)
             {
                 var statusMsg = statusMessage != null ? " Message: " + statusMessage + "." : string.Empty;
-                throw new UnsuccessfulSamlOperationException(string.Format($"The Saml2Response must have status success to extract claims. Status: {status.ToString()}.{statusMsg}"),
+                throw new UnsuccessfulSamlOperationException($"The Saml2Response must have status success to extract claims. Status: {status.ToString()}.{statusMsg}",
                             status, statusMessage, secondLevelStatus);
             }
 
