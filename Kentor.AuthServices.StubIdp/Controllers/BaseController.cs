@@ -38,7 +38,7 @@ namespace Kentor.AuthServices.StubIdp.Controllers
             }
             else
             {
-                return Server.MapPath(string.Format("~/App_Data/{0}.json", idpId));
+                return Server.MapPath(FormattableString.Invariant($"~/App_Data/{idpId}.json"));
             }
         }
 

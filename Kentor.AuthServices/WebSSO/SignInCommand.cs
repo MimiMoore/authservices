@@ -83,12 +83,8 @@ namespace Kentor.AuthServices.WebSso
                 returnUrl += "?ReturnUrl=" + Uri.EscapeDataString(returnPath);
             }
 
-            var redirectLocation = string.Format(
-                CultureInfo.InvariantCulture,
-                "{0}?entityID={1}&return={2}&returnIDParam=idp",
-                spOptions.DiscoveryServiceUrl,
-                Uri.EscapeDataString(spOptions.EntityId.Id),
-                Uri.EscapeDataString(returnUrl));
+            var redirectLocation = FormattableString.Invariant(
+                $"{spOptions.DiscoveryServiceUrl}?entityID={Uri.EscapeDataString(spOptions.EntityId.Id)}&return={Uri.EscapeDataString(returnUrl)}&returnIDParam=idp");
 
             return new CommandResult()
             {

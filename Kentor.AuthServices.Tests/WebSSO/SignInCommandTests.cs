@@ -125,11 +125,7 @@ namespace Kentor.AuthServices.Tests.WebSso
 
             result.HttpStatusCode.Should().Be(HttpStatusCode.SeeOther);
 
-            var queryString = string.Format("?entityID={0}&return={1}&returnIDParam=idp",
-                Uri.EscapeDataString(options.SPOptions.EntityId.Id),
-                Uri.EscapeDataString(
-                    "http://localhost/AuthServices/SignIn?ReturnUrl="
-                    + Uri.EscapeDataString("/Return/Path")));
+            var queryString = $"?entityID={Uri.EscapeDataString(options.SPOptions.EntityId.Id)}&return={Uri.EscapeDataString("http://localhost/AuthServices/SignIn?ReturnUrl=" + Uri.EscapeDataString("/Return/Path"))}&returnIDParam=idp";
 
             var expectedLocation = new Uri(dsUrl + queryString);
 

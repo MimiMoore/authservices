@@ -49,10 +49,7 @@ namespace Kentor.AuthServices.Saml2P
         {
             if(Status != Saml2StatusCode.Success)
             {
-                throw new UnsuccessfulSamlOperationException(string.Format(
-                    CultureInfo.InvariantCulture,
-                    "Artifact resolution returned status {0}, can't extract message.",
-                    Status));
+                throw new UnsuccessfulSamlOperationException(FormattableString.Invariant($"Artifact resolution returned status {Status}, can't extract message."));
             }
 
             return message;

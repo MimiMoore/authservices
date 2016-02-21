@@ -65,9 +65,7 @@ namespace Kentor.AuthServices.WebSso
                     artifact = request.Form["SAMLart"];
                     break;
                 default:
-                    throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture,
-                        "Artifact binding can only use GET or POST http method, but found {0}",
-                        request.HttpMethod));
+                    throw new InvalidOperationException(FormattableString.Invariant($"Artifact binding can only use GET or POST http method, but found {request.HttpMethod}"));
             }
 
             var data = ResolveArtifact(artifact, relayState, options);

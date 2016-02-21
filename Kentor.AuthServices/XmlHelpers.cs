@@ -276,14 +276,18 @@ namespace Kentor.AuthServices
                 var rawCert = keyIdentifier as X509RawDataKeyIdentifierClause;
                 if (rawCert == null)
                 {
-                    throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture,
-                        "Certificate validation enabled, but the signing key identifier is of type {0} which cannot be validated as a certificate.",
-                        keyIdentifier.GetType().Name));
+                    throw new InvalidOperationException(FormattableString.Invariant(
+                         $"Certificate validation enabled, but the signing key identifier is of type {keyIdentifier.GetType().Name} which cannot be validated as a certificate.")
+                    );
                 }
 
-                if (!new X509Certificate2(rawCert.GetX509RawData()).Verify())
+                //Added using block to solve CA2000 error
+                using (var cert = new X509Certificate2(rawCert.GetX509RawData()))
                 {
-                    throw new InvalidSignatureException("The signature was valid, but the verification of the certificate failed. Is it expired or revoked? Are you sure you really want to enable ValidateCertificates (it's normally not needed)?");
+                    if (!cert.Verify())
+                    {
+                        throw new InvalidSignatureException("The signature was valid, but the verification of the certificate failed. Is it expired or revoked? Are you sure you really want to enable ValidateCertificates (it's normally not needed)?");
+                    }
                 }
             }
         }

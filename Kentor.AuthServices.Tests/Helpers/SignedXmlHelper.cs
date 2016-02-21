@@ -43,7 +43,7 @@ namespace Kentor.AuthServices.Tests.Helpers
                 certificate = TestCert2;
             }
             var xmlDoc = new XmlDocument { PreserveWhitespace = true };
-            var wrappedAssertion = string.Format(@"<saml2:EncryptedAssertion xmlns:saml2=""urn:oasis:names:tc:SAML:2.0:assertion"">{0}</saml2:EncryptedAssertion>", assertionXml);
+            var wrappedAssertion = $@"<saml2:EncryptedAssertion xmlns:saml2=""urn:oasis:names:tc:SAML:2.0:assertion"">{assertionXml}</saml2:EncryptedAssertion>";
             xmlDoc.LoadXml(wrappedAssertion);
 
             var symmetricAlgorithm = new RijndaelManaged { KeySize = 256 };

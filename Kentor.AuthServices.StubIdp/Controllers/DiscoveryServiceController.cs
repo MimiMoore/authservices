@@ -15,12 +15,7 @@ namespace Kentor.AuthServices.StubIdp.Controllers
             {
                 string delimiter = model.@return.Contains("?") ? "&" : "?";
 
-                return Redirect(string.Format(
-                    "{0}{1}{2}={3}",
-                    model.@return,
-                    delimiter,
-                    model.returnIDParam,
-                    model.SelectedIdp));
+                return Redirect(FormattableString.Invariant($"{model.@return}{delimiter}{model.returnIDParam}={model.SelectedIdp}"));
             }
 
             return View(model);

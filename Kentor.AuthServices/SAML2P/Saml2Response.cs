@@ -410,8 +410,7 @@ namespace Kentor.AuthServices.Saml2P
                 {
                     return;
                 }
-                string msg = string.Format(CultureInfo.InvariantCulture,
-                    "Unsolicited responses are not allowed for idp \"{0}\".", Issuer.Id);
+                string msg = FormattableString.Invariant($"Unsolicited responses are not allowed for idp \"{Issuer.Id}\".");
                 throw new Saml2ResponseFailedValidationException(msg);
             }
             else
@@ -420,26 +419,19 @@ namespace Kentor.AuthServices.Saml2P
                 bool knownRelayStateKey = PendingAuthnRequests.TryRemove(RelayState, out storedRequestState);
                 if (!knownRelayStateKey)
                 {
-                    string msg = string.Format(CultureInfo.InvariantCulture,
-                        "Replayed or unknown RelayState \"{0}\".", RelayState);
-
+                    string msg = FormattableString.Invariant($"Replayed or unknown RelayState \"{RelayState}\".");
                     throw new Saml2ResponseFailedValidationException(msg);
                 }
                 requestState = storedRequestState;
                 if(!requestState.MessageId.Equals(InResponseTo))
                 {
-                    string msg = string.Format(CultureInfo.InvariantCulture,
-                        "InResponseTo Id \"{0}\" in received response does not match Id \"{1}\" of the sent request.",
-                        InResponseTo, storedRequestState.MessageId);
-
+                    string msg = FormattableString.Invariant($"InResponseTo Id \"{InResponseTo}\" in received response does not match Id \"{storedRequestState.MessageId}\" of the sent request.");
                     throw new Saml2ResponseFailedValidationException(msg);
                 }
 
                 if (requestState.Idp.Id != Issuer.Id)
                 {
-                    var msg = string.Format(CultureInfo.InvariantCulture,
-                        "Expected response from idp \"{0}\" but received response from idp \"{1}\".",
-                        requestState.Idp.Id, Issuer.Id);
+                    var msg = FormattableString.Invariant($"Expected response from idp \"{requestState.Idp.Id}\" but received response from idp \"{Issuer.Id}\".");
                     throw new Saml2ResponseFailedValidationException(msg);
                 }
             }
@@ -500,9 +492,9 @@ namespace Kentor.AuthServices.Saml2P
 
             if (status != Saml2StatusCode.Success)
             {
-                throw new UnsuccessfulSamlOperationException(string.Format("The Saml2Response must have status success to extract claims. Status: {0}.{1}"
-                , status.ToString(), statusMessage != null ? " Message: " + statusMessage + "." : string.Empty),
-                status, statusMessage, secondLevelStatus);
+                var statusMsg = statusMessage != null ? " Message: " + statusMessage + "." : string.Empty;
+                throw new UnsuccessfulSamlOperationException(string.Format($"The Saml2Response must have status success to extract claims. Status: {status.ToString()}.{statusMsg}"),
+                            status, statusMessage, secondLevelStatus);
             }
 
             foreach (XmlElement assertionNode in GetAllAssertionElementNodes(options))

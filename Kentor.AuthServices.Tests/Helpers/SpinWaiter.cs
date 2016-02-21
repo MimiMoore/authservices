@@ -62,7 +62,7 @@ namespace Kentor.AuthServices.Tests.Helpers
                 {
                     testResult = value2.Equals(value1);
                 }
-                return new TestResult(testResult, string.Format("Timeout passed without condition becoming false, expected {0}, last actual value was {1}", value2, value1));
+                return new TestResult(testResult, $"Timeout passed without condition becoming false, expected {value2}, last actual value was {value1}");
             }, spinWhileValue);
         }
 

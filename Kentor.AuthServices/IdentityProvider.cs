@@ -256,10 +256,9 @@ namespace Kentor.AuthServices
                 if(spOptions.SigningServiceCertificate == null)
                 {
                     throw new ConfigurationErrorsException(
-                        string.Format(
-                            CultureInfo.InvariantCulture,
-                            "Idp \"{0}\" is configured for signed AuthenticateRequests, but ServiceCertificates configuration contains no certificate with usage \"Signing\" or \"Both\".",
-                            EntityId.Id));
+                              FormattableString.Invariant(
+                              $"Idp \"{EntityId.Id}\" is configured for signed AuthenticateRequests, but ServiceCertificates configuration contains no certificate with usage \"Signing\" or \"Both\"."));
+
                 }
 
                 authnRequest.SigningCertificate = spOptions.SigningServiceCertificate;
@@ -334,9 +333,7 @@ namespace Kentor.AuthServices
             {
                 if (metadata.EntityId.Id != EntityId.Id)
                 {
-                    var msg = string.Format(CultureInfo.InvariantCulture,
-                        "Unexpected entity id \"{0}\" found when loading metadata for \"{1}\".",
-                        metadata.EntityId.Id, EntityId.Id);
+                    var msg = FormattableString.Invariant($"Unexpected entity id \"{metadata.EntityId.Id}\" found when loading metadata for \"{EntityId.Id}\".");
                     throw new ConfigurationErrorsException(msg);
                 }
 

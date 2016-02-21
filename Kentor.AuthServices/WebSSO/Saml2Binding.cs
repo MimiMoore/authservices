@@ -156,7 +156,7 @@ namespace Kentor.AuthServices.WebSso
                 return bindingType;
             }
 
-            var msg = string.Format(CultureInfo.InvariantCulture, "Unknown Saml2 Binding Uri \"{0}\".", uri);
+            var msg = FormattableString.Invariant($"Unknown Saml2 Binding Uri \"{uri}\".");
             throw new ArgumentException(msg);
         }
     }
