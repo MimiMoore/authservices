@@ -20,7 +20,7 @@ namespace Kentor.AuthServices.Tests.Helpers
         {
             var content = new Dictionary<string, string>();
 
-            content["/idpMetadata"] =
+            content["/idpMetadata"] = 
  $@"<EntityDescriptor xmlns=""urn:oasis:names:tc:SAML:2.0:metadata""
     entityID=""http://localhost:13428/idpMetadata"" validUntil=""2100-01-02T14:42:43Z"">
     <IDPSSODescriptor
@@ -36,15 +36,11 @@ namespace Kentor.AuthServices.Tests.Helpers
         Location=""http://localhost:{IdpMetadataSsoPort}/ars""/>
       <ArtifactResolutionService index=""117""
         Binding=""urn:oasis:names:tc:SAML:2.0:bindings:SOAP""
-<<<<<<< HEAD
         Location=""http://localhost:{IdpMetadataSsoPort}/ars2""/>
-=======
-        Location=""http://localhost:{1}/ars2""/>
       <SingleLogoutService
         Binding=""urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect""
-        Location=""http://localhost:{1}/logout""
-        ResponseLocation=""http://localhost:{1}/logoutResponse""/>
->>>>>>> eb2b4b43a48222eaee44191a32e3523903bb1cbf
+        Location=""http://localhost:{IdpMetadataSsoPort}/logout""
+        ResponseLocation=""http://localhost:{IdpMetadataSsoPort}/logoutResponse""/>
     </IDPSSODescriptor>
   </EntityDescriptor>
 ";
@@ -63,7 +59,7 @@ namespace Kentor.AuthServices.Tests.Helpers
     </IDPSSODescriptor>
   </EntityDescriptor>";
 
-            content["/idpMetadataOtherEntityId"] =
+            content["/idpMetadataOtherEntityId"] = 
 $@"<EntityDescriptor xmlns=""urn:oasis:names:tc:SAML:2.0:metadata""
     entityID=""http://other.entityid.example.com"">
     <IDPSSODescriptor
@@ -78,7 +74,7 @@ $@"<EntityDescriptor xmlns=""urn:oasis:names:tc:SAML:2.0:metadata""
     </IDPSSODescriptor>
   </EntityDescriptor>";
 
-            content["/federationMetadata"] =
+            content["/federationMetadata"] = 
 $@"<EntitiesDescriptor xmlns=""urn:oasis:names:tc:SAML:2.0:metadata"" validUntil=""2100-01-01T14:43:15Z"">
   <EntityDescriptor entityID=""http://idp.federation.example.com/metadata"">
     <IDPSSODescriptor
@@ -104,7 +100,7 @@ $@"<EntitiesDescriptor xmlns=""urn:oasis:names:tc:SAML:2.0:metadata"" validUntil
 
             if (IdpAndFederationShortCacheDurationAvailable)
             {
-                content["/federationMetadataVeryShortCacheDuration"] =
+                content["/federationMetadataVeryShortCacheDuration"] = 
 $@"<EntitiesDescriptor xmlns=""urn:oasis:names:tc:SAML:2.0:metadata"" cacheDuration=""PT0.001S"">
   <EntityDescriptor entityID=""http://idp1.federation.example.com/metadata"">
     <IDPSSODescriptor
@@ -141,7 +137,7 @@ $@"<EntitiesDescriptor xmlns=""urn:oasis:names:tc:SAML:2.0:metadata"" cacheDurat
 
             if (FederationVeryShortCacheDurationSecondAlternativeEnabled)
             {
-                content["/federationMetadataVeryShortCacheDuration"] =
+                content["/federationMetadataVeryShortCacheDuration"] = 
 $@"<EntitiesDescriptor xmlns=""urn:oasis:names:tc:SAML:2.0:metadata"" cacheDuration=""PT0.001S"">
   <EntityDescriptor entityID=""http://idp1.federation.example.com/metadata"">
     <IDPSSODescriptor
@@ -178,7 +174,7 @@ $@"<EntitiesDescriptor xmlns=""urn:oasis:names:tc:SAML:2.0:metadata"" cacheDurat
 
             if (IdpAndFederationShortCacheDurationAvailable)
             {
-                content["/federationMetadataShortCacheDuration"] =
+                content["/federationMetadataShortCacheDuration"] = 
 $@"<EntitiesDescriptor xmlns=""urn:oasis:names:tc:SAML:2.0:metadata"" cacheDuration=""PT0.200S"">
   <EntityDescriptor entityID=""http://idp1.federation.example.com/metadata"">
     <IDPSSODescriptor
@@ -213,7 +209,7 @@ $@"<EntitiesDescriptor xmlns=""urn:oasis:names:tc:SAML:2.0:metadata"" cacheDurat
 </EntitiesDescriptor>";
             }
 
-            content["/idpMetadataWithMultipleBindings"] =
+            content["/idpMetadataWithMultipleBindings"] = 
 $@"<EntityDescriptor xmlns=""urn:oasis:names:tc:SAML:2.0:metadata""
   entityID=""http://localhost:13428/idpMetadataWithMultipleBindings"">
   <IDPSSODescriptor
@@ -230,7 +226,7 @@ $@"<EntityDescriptor xmlns=""urn:oasis:names:tc:SAML:2.0:metadata""
   </IDPSSODescriptor>
 </EntityDescriptor>";
 
-            content["/idpMetadataDifferentEntityId"] =
+            content["/idpMetadataDifferentEntityId"] = 
 $@"<EntityDescriptor xmlns=""urn:oasis:names:tc:SAML:2.0:metadata""
   entityID=""some-idp"">
   <IDPSSODescriptor
@@ -244,7 +240,7 @@ $@"<EntityDescriptor xmlns=""urn:oasis:names:tc:SAML:2.0:metadata""
   </IDPSSODescriptor>
 </EntityDescriptor>";
 
-            content["/idpMetadataWithArtifactBinding"] =
+            content["/idpMetadataWithArtifactBinding"] = 
 $@"<EntityDescriptor xmlns=""urn:oasis:names:tc:SAML:2.0:metadata""
   entityID=""http://localhost:13428/idpMetadataWithArtifactBinding"">
   <IDPSSODescriptor
@@ -263,12 +259,11 @@ $@"<EntityDescriptor xmlns=""urn:oasis:names:tc:SAML:2.0:metadata""
 
             if (IdpAndFederationShortCacheDurationAvailable)
             {
-
                 string keyDescriptor = IdpVeryShortCacheDurationIncludeInvalidKey ? "Gibberish" : SignedXmlHelper.KeyInfoXml2;
                 string keyDescriptorXml = $@"<KeyDescriptor use=""signing"">{keyDescriptor}</KeyDescriptor>";
                 string keyElement = IdpVeryShortCacheDurationIncludeKey ? keyDescriptorXml : "";
 
-                content["/idpMetadataVeryShortCacheDuration"] =
+                content["/idpMetadataVeryShortCacheDuration"] = 
 $@"<EntityDescriptor xmlns=""urn:oasis:names:tc:SAML:2.0:metadata""
 entityID=""http://localhost:13428/idpMetadataVeryShortCacheDuration"" cacheDuration=""PT0.001S"">
 <IDPSSODescriptor
@@ -282,9 +277,9 @@ entityID=""http://localhost:13428/idpMetadataVeryShortCacheDuration"" cacheDurat
       Location=""http://localhost:{IdpAndFederationVeryShortCacheDurationPort}/ars""
       Binding=""urn:oasis:names:tc:SAML:2.0:bindings:SOAP"" />
       <SingleLogoutService
-        Binding=""{1}""
-        Location=""http://localhost:{2}/logout""
-        ResponseLocation=""http://localhost:{2}/logoutResponse""/>
+        Binding=""{IdpVeryShortCacheDurationBinding}""
+        Location=""http://localhost:{IdpAndFederationVeryShortCacheDurationPort}/logout""
+        ResponseLocation=""http://localhost:{IdpAndFederationVeryShortCacheDurationPort}/logoutResponse""/>
 </IDPSSODescriptor>
 </EntityDescriptor>";
             }
@@ -346,10 +341,10 @@ entityID=""http://localhost:13428/idpMetadataVeryShortCacheDuration"" cacheDurat
                 LastArtifactResolutionWasSigned = parsedRequest
                     .Element(Saml2Namespaces.SoapEnvelope + "Body")
                     .Element(Saml2Namespaces.Saml2P + "ArtifactResolve")
-                    .Element(XNamespace.Get(SignedXml.XmlDsigNamespaceUrl) + "Signature")
+                    .Element(XNamespace.Get(SignedXml.XmlDsigNamespaceUrl)+ "Signature")
                     != null;
 
-                var response =
+                var response = 
     $@"<SOAP-ENV:Envelope
     xmlns:SOAP-ENV=""http://schemas.xmlsoap.org/soap/envelope/"">
     <SOAP-ENV:Body>
