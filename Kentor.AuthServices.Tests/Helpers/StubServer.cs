@@ -36,7 +36,15 @@ namespace Kentor.AuthServices.Tests.Helpers
         Location=""http://localhost:{IdpMetadataSsoPort}/ars""/>
       <ArtifactResolutionService index=""117""
         Binding=""urn:oasis:names:tc:SAML:2.0:bindings:SOAP""
+<<<<<<< HEAD
         Location=""http://localhost:{IdpMetadataSsoPort}/ars2""/>
+=======
+        Location=""http://localhost:{1}/ars2""/>
+      <SingleLogoutService
+        Binding=""urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect""
+        Location=""http://localhost:{1}/logout""
+        ResponseLocation=""http://localhost:{1}/logoutResponse""/>
+>>>>>>> eb2b4b43a48222eaee44191a32e3523903bb1cbf
     </IDPSSODescriptor>
   </EntityDescriptor>
 ";
@@ -49,6 +57,9 @@ namespace Kentor.AuthServices.Tests.Helpers
       <SingleSignOnService
         Binding=""urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect""
         Location=""http://localhost:13428/acs""/>
+      <SingleLogoutService
+        Binding=""urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect""
+        Location=""http://localhost:13428/logout""/>
     </IDPSSODescriptor>
   </EntityDescriptor>";
 
@@ -270,6 +281,10 @@ entityID=""http://localhost:13428/idpMetadataVeryShortCacheDuration"" cacheDurat
       index=""0""
       Location=""http://localhost:{IdpAndFederationVeryShortCacheDurationPort}/ars""
       Binding=""urn:oasis:names:tc:SAML:2.0:bindings:SOAP"" />
+      <SingleLogoutService
+        Binding=""{1}""
+        Location=""http://localhost:{2}/logout""
+        ResponseLocation=""http://localhost:{2}/logoutResponse""/>
 </IDPSSODescriptor>
 </EntityDescriptor>";
             }
