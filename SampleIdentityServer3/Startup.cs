@@ -18,6 +18,7 @@ using Microsoft.Owin.Security.OpenIdConnect;
 using System.Threading.Tasks;
 using Serilog;
 using Microsoft.Owin.Security;
+using IdentityServer3.Core.Extensions;
 
 [assembly: OwinStartupAttribute(typeof(SampleIdentityServer3.Startup))]
 
@@ -114,6 +115,7 @@ namespace SampleIdentityServer3
 
         private void ConfigureSaml2(IAppBuilder app, string signInAsType)
         {
+
             var options = new KentorAuthServicesAuthenticationOptions(false)
             {
                 SPOptions = new SPOptions
@@ -124,8 +126,7 @@ namespace SampleIdentityServer3
                 Caption = "SAML2p"
             };
 
-            options.SPOptions.SystemIdentityModelIdentityConfiguration.AudienceRestriction.AudienceMode 
-                = AudienceUriMode.Never;
+            UseIdSrv3LogoutOnFederatedLogout(app, options);
 
             options.SPOptions.ServiceCertificates.Add(new X509Certificate2(
                 AppDomain.CurrentDomain.SetupInformation.ApplicationBase + "/App_Data/Kentor.AuthServices.Tests.pfx"));
@@ -138,6 +139,43 @@ namespace SampleIdentityServer3
             });
 
             app.UseKentorAuthServicesAuthentication(options);
+        }
+
+        private void UseIdSrv3LogoutOnFederatedLogout(IAppBuilder app, KentorAuthServicesAuthenticationOptions options)
+        {
+            app.Map("/signoutcleanup", cleanup =>
+            {
+                cleanup.Run(async ctx =>
+                {
+                    await ctx.Environment.ProcessFederatedSignoutAsync();
+                });
+            });
+
+            app.Use(async (context, next) =>
+            {
+                await next.Invoke();
+
+                if (context.Authentication.AuthenticationResponseRevoke != null
+                    && context.Response.StatusCode % 100 == 3
+                    && !HttpContext.Current.Response.HeadersWritten)
+                {
+                    var finalLocation = context.Response.Headers["Location"];
+
+                    context.Response.StatusCode = 200;
+
+                    await context.Response.WriteAsync($@"
+<html>
+    <body>
+        <h1>Signing Out...<span id=""dots""></span></h1>
+        <iframe style=""display:none;"" src=""../signoutcleanup""></iframe>
+        <script>
+            setInterval(function() {{ var dots = document.getElementById(""dots""); dots.innerText = dots.innerText + "".""; }}, 250);
+            setTimeout(function() {{ window.location = ""{finalLocation}""; }}, 5000);
+        </script>
+    </body>
+</html>");
+                }
+            });
         }
     }
 }

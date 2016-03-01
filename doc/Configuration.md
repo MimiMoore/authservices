@@ -1,8 +1,14 @@
 kentor.AuthServices Configuration
 =============
-To use Kentor.AuthServices in an application it must be enabled in the 
-application's `web.config`. The sample applications contains complete
-working [`web.config`](../SampleApplication/Web.config) examples. For ASP.NET MVC applications see [`this working web.config`](../SampleMvcApplication/Web.config) example.
+To use Kentor.AuthServices in an application and configure it in web.config
+(which is the default for the httpmodule and mvc libraries) it must be enabled 
+in the application's `web.config`. The sample applications contains complete
+working [`web.config`](../SampleApplication/Web.config) examples. For 
+ASP.NET MVC applications see [`this working web.config`](../SampleMvcApplication/Web.config)
+example. Applications using the owin library usually make their configuration
+in code and in that case no web.config changes are needed. If an owin library
+is set up to use web.config (by passing `true` to the `KentorAuthServicesAuthenticationOptions` 
+constructor) the information here applies.
 
 ##Config Sections
 Three new config sections are required. Add these under `configuration/configSections`:
@@ -52,7 +58,7 @@ read web.config, but can also be configured from code.
   </metadata>
   <identityProviders>
     <add entityId="https://stubidp.kentor.se/Metadata" 
-         destinationUrl="https://stubidp.kentor.se" 
+         signOnUrl="https://stubidp.kentor.se" 
          allowUnsolicitedAuthnResponse="true"
 		 binding="HttpRedirect"
 		 wantAuthnRequestsSigned="true">
@@ -82,7 +88,7 @@ Root element of the config section.
 * [`modulePath`](#modulepath-attribute)
 * [`authenticateRequestSigningBehavior`](#authenticaterequestsigningbehavior-attribute)
 * [`validateCertificates`](#validatecertificates-attribute)
-* [`publicOrigin`](#publicOrigin-attribute)
+* [`publicOrigin`](#publicorigin-attribute)
 
 ####Elements
 * [`<nameIdPolicy>`](#nameidpolicy-element)
@@ -149,11 +155,16 @@ validation, so don't be surprised if an Idp certificate doesn't pass validation.
 *Optional Attribute of the [`<kentor.authServices>`](#kentor-authservices-section) element.*
 
 Optional attribute that indicates the base url of the AuthServices endpoints.
-Defaults to `Url` of the current request base `System.Web.HttpRequestBase` if
-not specified. This can usually be left as the default, but if your internal
-address of the application is diffrent the external address this can correct a
-wrongly set `AssertionConsumerServiceURL` in the `saml2p:AuthnRequest`.
-This might not be accurate in reverse proxy or load-balancing situations. 
+It should be the root path of the application. E.g. The SignIn url is built
+up as PublicOrigin + / + modulePath + /SignIn.
+
+Defaults to `Url` of the current http request if not specified. This can usually 
+be left as the default, but if your internal address of the application is 
+different than the external address the generated URLs (such as  `AssertionConsumerServiceURL` 
+in the `saml2p:AuthnRequest`) will be incorrect. The use case for this is typically 
+with load balancers or reverse proxies. It can also be used if the application
+can be accessed by several external URLs to make sure that the registered in
+metadata is used in communication with the Idp.
 
 ###`<nameIdPolicy>` Element
 *Optional child element of the [`<kentor.authServices>`](#kentor-authservices-section) element.*
@@ -445,7 +456,8 @@ A list of identity providers known to the service provider.
 
 ####Attributes
 * [`entityID`](#entityId-attribute-identityprovider)
-* [`destinationUrl`](#destinationuri-attribute)
+* [`signOnUrl`](#signonurl-attribute)
+* [`logoutUrl`](#logouturl-attribute)
 * [`allowUnsolicitedAuthnResponse`](#allowunsolicitedauthnresponse-attribute)
 * [`binding`](#binding-attribute)
 * [`wantAuthnRequestsSigned`](#wantauthnrequestssigned-attribute)
@@ -461,14 +473,21 @@ A list of identity providers known to the service provider.
 The issuer name that the idp will be using when sending responses. When `<loadMetadata>`
 is enabled, the `entityId` is treated as a URL to for downloading the metadata.
 
-####`destinationUrl` Attribute
+####`signOnUrl` Attribute
 *Optional attribute of the [`<add>`](#add-identityprovider-element) element*
 
-The uri where the identity provider listens for incoming requests. The 
-uri has to be written in a way that the client understands, since it is
-the client web browser that will be redirected to the uri. Specifically
-this means that using a host name only uri or a host name that only resolves
+The url where the identity provider listens for incoming sign on requests. The 
+url has to be written in a way that the client understands, since it is
+the client web browser that will be redirected to the url. Specifically
+this means that using a host name only url or a host name that only resolves
 on the network of the server won't work.
+
+####`logoutUrl` Attribute
+*Optional attribute of the [`<add>`](#add-identityprovider-element) element*
+
+The url where the identity provider listens for incoming logout requests and
+responses. To enable single logout behaviour there must also be a service
+certificate configured in AuthServices as all logout messages must be signed.
 
 ####`allowUnsolicitedAuthnResponse` Attribute
 *Attribute of the [`<add>`](#add-identityprovider-element) element*
